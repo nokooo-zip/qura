@@ -4,7 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "./Common";
 import { useAuth } from "../context/AuthContext";
 
-const Sidebar = ({ view = "admin", clientName = "" }) => {
+const Sidebar = ({
+  view = "admin",
+  clientName = "",
+  activeTab = "header",
+  onTabChange,
+}) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
@@ -12,6 +17,12 @@ const Sidebar = ({ view = "admin", clientName = "" }) => {
     logout();
     navigate("/login");
   }
+
+  const tabs = [
+    { id: "header", label: "Header" },
+    { id: "links", label: "Links" },
+    { id: "design", label: "Design" },
+  ];
 
   return (
     <div className="w-64 h-screen bg-gray-100 flex flex-col justify-between fixed left-0 top-0 border-r border-gray-200 z-20">
@@ -40,10 +51,20 @@ const Sidebar = ({ view = "admin", clientName = "" }) => {
                 <User size={20} />
                 <span className="truncate">{clientName}</span>
               </div>
-              <div className="pl-11 space-y-1">
-                <div className="px-4 py-2 bg-gray-200 rounded-lg text-slate-800 font-medium">
-                  Links
-                </div>
+              <div className="pl-4 space-y-1">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => onTabChange?.(tab.id)}
+                    className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === tab.id
+                        ? "bg-gray-200 text-slate-800"
+                        : "text-slate-500 hover:text-slate-800 hover:bg-gray-50"
+                      }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
             </>
           )}

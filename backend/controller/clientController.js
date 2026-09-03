@@ -1,10 +1,6 @@
 const Client = require("../models/client");
 const QRCode = require("qrcode");
 
-/**
- * GET /api/clients  (auth)
- * List all clients for the admin panel.
- */
 const listClients = async (req, res) => {
   try {
     const clients = await Client.find()
@@ -17,10 +13,6 @@ const listClients = async (req, res) => {
   }
 };
 
-/**
- * GET /api/clients/:id  (auth)
- * Full client document for the editor.
- */
 const getClient = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
@@ -34,10 +26,6 @@ const getClient = async (req, res) => {
   }
 };
 
-/**
- * GET /api/public/:slug
- * Public micro-website payload (no auth). Used by QR landing page.
- */
 const getPublicBySlug = async (req, res) => {
   try {
     const client = await Client.findOne({ slug: req.params.slug.toLowerCase() });
@@ -51,10 +39,6 @@ const getPublicBySlug = async (req, res) => {
   }
 };
 
-/**
- * POST /api/clients  (auth)
- * Create a new client / business micro-site.
- */
 const createClient = async (req, res) => {
   try {
     const {
@@ -62,6 +46,9 @@ const createClient = async (req, res) => {
       contact,
       description,
       themeColor,
+      headerTextColor,
+      buttonColor,
+      buttonTextColor,
       logoText,
       coverImageUrl,
       logoImageUrl,
@@ -77,7 +64,6 @@ const createClient = async (req, res) => {
     let baseSlug = Client.slugify(name);
     if (!baseSlug) baseSlug = "business";
 
-    // Ensure unique slug
     let slug = baseSlug;
     let n = 1;
     while (await Client.findOne({ slug })) {
@@ -89,7 +75,10 @@ const createClient = async (req, res) => {
       slug,
       contact: contact || "",
       description: description || "",
-      themeColor: themeColor || "#EAF2D7",
+      themeColor: themeColor || "#FFFFFF",
+      headerTextColor: headerTextColor || "#000000",
+      buttonColor: buttonColor || "#000000",
+      buttonTextColor: buttonTextColor || "#FFFFFF",
       logoText: logoText || name.trim().slice(0, 8).toUpperCase(),
       coverImageUrl: coverImageUrl || "",
       logoImageUrl: logoImageUrl || "",
@@ -109,10 +98,6 @@ const createClient = async (req, res) => {
   }
 };
 
-/**
- * PUT /api/clients/:id  (auth)
- * Update client profile + links + products.
- */
 const updateClient = async (req, res) => {
   try {
     const allowed = [
@@ -120,6 +105,9 @@ const updateClient = async (req, res) => {
       "contact",
       "description",
       "themeColor",
+      "headerTextColor",
+      "buttonColor",
+      "buttonTextColor",
       "logoText",
       "coverImageUrl",
       "logoImageUrl",
@@ -135,7 +123,6 @@ const updateClient = async (req, res) => {
       }
     }
 
-    // If name changes, optionally refresh slug only when client asks
     if (req.body.regenerateSlug && updates.name) {
       let baseSlug = Client.slugify(updates.name);
       if (!baseSlug) baseSlug = "business";
@@ -163,9 +150,6 @@ const updateClient = async (req, res) => {
   }
 };
 
-/**
- * DELETE /api/clients/:id  (auth)
- */
 const deleteClient = async (req, res) => {
   try {
     const client = await Client.findByIdAndDelete(req.params.id);
@@ -179,10 +163,6 @@ const deleteClient = async (req, res) => {
   }
 };
 
-/**
- * GET /api/clients/:id/qr  (auth)
- * Returns a PNG data-URL for a QR that points at the public profile.
- */
 const getClientQr = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id).select("slug name");

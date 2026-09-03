@@ -4,7 +4,7 @@ const linkSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     url: { type: String, required: true, trim: true },
-    icon: { type: String, default: "link" }, // phone | mail | facebook | instagram | tiktok | map | link
+    icon: { type: String, default: "link" },
     order: { type: Number, default: 0 },
   },
   { _id: true }
@@ -27,7 +27,6 @@ const clientSchema = new mongoose.Schema(
       trim: true,
       minlength: [2, "Name must be at least 2 characters"],
     },
-    // Short unique handle used in public URL: /profile/:slug
     slug: {
       type: String,
       required: true,
@@ -45,10 +44,21 @@ const clientSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    // Theme / design
     themeColor: {
       type: String,
-      default: "#EAF2D7",
+      default: "#FFFFFF",
+    },
+    headerTextColor: {
+      type: String,
+      default: "#000000",
+    },
+    buttonColor: {
+      type: String,
+      default: "#000000",
+    },
+    buttonTextColor: {
+      type: String,
+      default: "#FFFFFF",
     },
     logoText: {
       type: String,
@@ -72,7 +82,6 @@ const clientSchema = new mongoose.Schema(
     },
     links: [linkSchema],
     products: [productSchema],
-    // Admin who owns this client record
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -81,7 +90,6 @@ const clientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Helper: turn "Tripsy Nepal" → "tripsy-nepal"
 clientSchema.statics.slugify = function (name) {
   return String(name)
     .toLowerCase()

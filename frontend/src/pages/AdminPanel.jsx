@@ -109,7 +109,7 @@ const AdminPanel = () => {
               </div>
             ) : clients.length === 0 ? (
               <p className="text-center text-gray-500 py-16">
-                No clients yet. Create one to generate a micro-website + QR.
+                No clients yet.
               </p>
             ) : (
               <table className="w-full text-left border-collapse">
@@ -208,14 +208,14 @@ const AdminPanel = () => {
               label="Business name"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              placeholder="e.g. Tripsy Nepal"
+              placeholder=""
               required
             />
             <Input
               label="Contact"
               value={newContact}
               onChange={(e) => setNewContact(e.target.value)}
-              placeholder="+977 98..."
+              placeholder=""
             />
             <Button type="submit" disabled={creating}>
               {creating ? <Spinner className="w-5 h-5 text-white" /> : "Create"}

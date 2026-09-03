@@ -10,7 +10,7 @@ const { requireAuth } = require("./middleware/auth");
 const app = express();
 
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "15mb" }));
 
 // Prefer public DNS when Atlas resolution fails on some networks
 const dns = require("dns");
